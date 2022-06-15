@@ -35,9 +35,6 @@ uniform Light lights[2];
 
 vec3 calculate_point_light(Light light)
 {
-    float distance = length(light.position - FragPos);
-    float att = 1.0 / (light.constant + light.linear * distance + light.quadratic * distance * distance);
-
     // ambient
     vec3 ambient = light.ambient * vec3(texture(material.diffuse, TexCoords));
 
@@ -53,19 +50,12 @@ vec3 calculate_point_light(Light light)
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
     vec3 specular = light.specular * spec * vec3(texture(material.specular, TexCoords));
 
-    ambient *= att;
-    diffuse *= att;
-    specular *= att;
-
     vec3 result = ambient + diffuse + specular;
     return result;
 }
 
 vec3 calculate_spotlight_light(Light light)
 {
-    float distance = length(light.position - FragPos);
-    float att = 1.0 / (light.constant + light.linear * distance + light.quadratic * distance * distance);
-
     float theta = dot(normalize(light.position - FragPos), normalize(-light.spotlight_dir));
 
     if (theta > light.spotlight_cutoff)
@@ -74,14 +64,17 @@ vec3 calculate_spotlight_light(Light light)
     }
     else
     {
-        return vec3(light.ambient * att * vec3(texture(material.diffuse, TexCoords)));
+        return vec3(light.ambient * vec3(texture(material.diffuse, TexCoords)));
     }
 }
 
 vec3 calculate_light(Light light)
 {
-    if (light.type == 0) return calculate_point_light(light);
-    if (light.type == 1) return calculate_spotlight_light(light);
+    float distance = length(light.position - FragPos);
+    float att = 1.0 / (light.constant + light.linear * distance + light.quadratic * distance * distance);
+
+    if (light.type == 0) return att * calculate_point_light(light);
+    if (light.type == 1) return att * calculate_spotlight_light(light);
 
     return vec3(0.0);
 }
