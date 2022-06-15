@@ -110,13 +110,6 @@ void cube_move(struct Cube *c, vec3 dir)
 
 void cube_rot(struct Cube *c, float deg, vec3 axis)
 {
-    /* vec3 dir; */
-    /* glm_vec3_negate_to(c->pos, dir); */
-
-    /* cube_move(c, dir); */
     glm_rotate(c->rot, glm_rad(deg), axis);
-
-    /* glm_vec3_negate(dir); */
-    /* cube_move(c, dir); */
 }
 
