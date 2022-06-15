@@ -55,7 +55,7 @@ void prog_mainloop(struct Prog *p)
             .constant = 1.f,
             .linear = .09f,
             .quadratic = .032f
-        }), (vec3){ 0.f, 0.f, -1.f }, cosf(glm_rad(12.5f))),
+        }), (vec3){ 0.f, 0.f, -1.f }, cosf(glm_rad(12.5f)), cosf(glm_rad(17.5f))),
         light_alloc((vec3){ 2.f, 3.f, -5.f }, phong(
             (vec3){ .2f, .2f, .2f },
             (vec3){ .5f, .5f, .5f },

@@ -39,11 +39,13 @@ void light_free(struct Light *l)
 }
 
 
-struct Light *light_spotlight(struct Light *l, vec3 dir, float cutoff)
+struct Light *light_spotlight(struct Light *l, vec3 dir, float cutoff, float outer_cutoff)
 {
     l->type = LIGHT_SPOTLIGHT;
+
     glm_vec3_dup(dir, l->spotlight_dir);
     l->spotlight_cutoff = cutoff;
+    l->spotlight_outer_cutoff = outer_cutoff;
 
     return l;
 }
@@ -86,6 +88,9 @@ void light_set_props(struct Light *l, unsigned int shader, int idx)
 
         LIGHT_AT(s, idx, "spotlight_cutoff");
         shader_float(shader, s, l->spotlight_cutoff);
+
+        LIGHT_AT(s, idx, "spotlight_outer_cutoff");
+        shader_float(shader, s, l->spotlight_outer_cutoff);
     }
 }
 

@@ -24,6 +24,7 @@ struct Light {
 
     vec3 spotlight_dir;
     float spotlight_cutoff;
+    float spotlight_outer_cutoff;
 };
 
 in vec3 FragPos;
@@ -56,16 +57,11 @@ vec3 calculate_point_light(Light light)
 
 vec3 calculate_spotlight_light(Light light)
 {
-    float theta = dot(normalize(light.position - FragPos), normalize(-light.spotlight_dir));
+    float theta = dot(normalize(light.position - FragPos), normalize(-light.spotlight_dir)); 
+    float epsilon = (light.spotlight_cutoff - light.spotlight_outer_cutoff);
+    float intensity = clamp((theta - light.spotlight_outer_cutoff) / epsilon, 0.0, 1.0);
 
-    if (theta > light.spotlight_cutoff)
-    {
-        return calculate_point_light(light);
-    }
-    else
-    {
-        return vec3(light.ambient * vec3(texture(material.diffuse, TexCoords)));
-    }
+    return calculate_point_light(light) * intensity;
 }
 
 vec3 calculate_light(Light light)

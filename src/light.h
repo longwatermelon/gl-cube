@@ -28,13 +28,13 @@ struct Light
 
     // spotlight
     vec3 spotlight_dir;
-    float spotlight_cutoff;
+    float spotlight_cutoff, spotlight_outer_cutoff;
 };
 
 struct Light *light_alloc(vec3 pos, Phong col, Attenuation att);
 void light_free(struct Light *l);
 
-struct Light *light_spotlight(struct Light *l, vec3 dir, float cutoff);
+struct Light *light_spotlight(struct Light *l, vec3 dir, float cutoff, float outer_cutoff);
 
 void light_set_props(struct Light *l, unsigned int shader, int idx);
 
