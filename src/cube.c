@@ -46,11 +46,10 @@ const float g_verts[] = {
     -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
 };
 
-struct Cube *cube_alloc(vec3 pos, vec3 rot)
+struct Cube *cube_alloc(vec3 pos)
 {
     struct Cube *c = malloc(sizeof(struct Cube));
     glm_vec3_dup(pos, c->pos);
-    glm_vec3_dup(rot, c->rot);
 
     glGenVertexArrays(1, &c->vao);
     glBindVertexArray(c->vao);
@@ -66,7 +65,7 @@ struct Cube *cube_alloc(vec3 pos, vec3 rot)
     glEnableVertexAttribArray(1);
 
     glm_mat4_identity(c->model);
-//    glm_translate(c->model, c->pos);
+    glm_translate(c->model, c->pos);
 
     return c;
 }
@@ -88,5 +87,18 @@ void cube_render(struct Cube *c, RenderInfo *ri)
 
     glBindVertexArray(c->vao);
     glDrawArrays(GL_TRIANGLES, 0, 36);
+}
+
+
+void cube_move(struct Cube *c, vec3 dir)
+{
+    glm_translate(c->model, dir);
+    glm_vec3_add(c->pos, dir, c->pos);
+}
+
+
+void cube_rot(struct Cube *c, float deg, vec3 axis)
+{
+    glm_rotate(c->model, glm_rad(deg), axis);
 }
 
