@@ -60,24 +60,27 @@ void prog_mainloop(struct Prog *p)
         ))
     };
 
-
     glEnable(GL_DEPTH_TEST);
+
+    glfwSetInputMode(p->win, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+    double prev_mx, prev_my;
+    glfwGetCursorPos(p->win, &prev_mx, &prev_my);
 
     while (!glfwWindowShouldClose(p->win))
     {
+        double mx, my;
+        glfwGetCursorPos(p->win, &mx, &my);
+
+        cam_rot(p->cam, (vec3){ (mx - prev_mx) / 5.f, -(my - prev_my) / 5.f, 0.f });
+        prev_mx = mx;
+        prev_my = my;
+
         prog_events(p);
 
         cube_rot(c, 2.f, (vec3){ 1.f, 0.8f, .5f });
         glClearColor(0.f, 0.f, 0.f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        /* glm_mat4_identity(p->ri.view); */
-        /* glm_vec3_negate(p->cam->pos); */
-        /* glm_translate(p->ri.view, p->cam->pos); */
-        /* glm_vec3_negate(p->cam->pos); */
-
-        /* vec3 cam_dir; */
-        /* glm_vec3_add(p->cam->pos, p->cam->front, cam_dir); */
 
         glm_look(p->cam->pos, p->cam->front, p->cam->up, p->ri.view);
 
