@@ -52,10 +52,11 @@ void light_set_props(struct Light *l, unsigned int shader, int idx)
 }
 
 
-struct Material *mat_alloc(Phong col, float shininess)
+struct Material *mat_alloc(struct Texture *tex, vec3 spec, float shininess)
 {
     struct Material *m = malloc(sizeof(struct Material));
-    m->col = col;
+    m->tex = tex;
+    glm_vec3_dup(spec, m->specular);
     m->shininess = shininess;
 
     return m;
@@ -70,9 +71,9 @@ void mat_free(struct Material *m)
 
 void mat_set_props(struct Material *m, unsigned int shader)
 {
-    shader_vec3(shader, "material.ambient", m->col.ambient);
-    shader_vec3(shader, "material.diffuse", m->col.diffuse);
-    shader_vec3(shader, "material.specular", m->col.specular);
+    shader_vec3(shader, "material.specular", m->specular);
     shader_float(shader, "material.shininess", m->shininess);
+
+    shader_int(shader, "material.diffuse", m->tex->tex_slot);
 }
 

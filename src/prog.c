@@ -39,11 +39,10 @@ void prog_mainloop(struct Prog *p)
 {
     glUseProgram(p->shader);
     shader_int(p->shader, "nlights", 2);
-    struct Material *mat = mat_alloc(phong(
-        (vec3){ 1.f, .5f, .31f },
-        (vec3){ 1.f, .5f, .31f },
-        (vec3){ .5f, .5f, .5f }
-    ), 32.f);
+
+    struct Texture *tex = tex_alloc("res/container.png", 0, p->shader);
+
+    struct Material *mat = mat_alloc(tex, (vec3){ .5f, .5f, .5f }, 32.f);
 
     struct Cube *c = cube_alloc((vec3){ 2.f, -1.f, -5.f }, mat);
 
