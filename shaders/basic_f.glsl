@@ -15,6 +15,10 @@ struct Light {
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
+
+    float constant;
+    float linear;
+    float quadratic;
 };
 
 in vec3 FragPos;
@@ -26,6 +30,9 @@ uniform Light lights[2];
 
 vec3 calculate_light(Light light)
 {
+    float distance = length(light.position - FragPos);
+    float att = 1.0 / (light.constant + light.linear * distance + light.quadratic * distance * distance);
+
     // ambient
     vec3 ambient = light.ambient * vec3(texture(material.diffuse, TexCoords));
 
@@ -40,6 +47,10 @@ vec3 calculate_light(Light light)
     vec3 reflectDir = reflect(-lightDir, norm);  
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
     vec3 specular = light.specular * spec * vec3(texture(material.specular, TexCoords));
+
+    ambient *= att;
+    diffuse *= att;
+    specular *= att;
 
     vec3 result = ambient + diffuse + specular;
     return result;

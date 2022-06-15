@@ -49,7 +49,7 @@ const float g_verts[] = {
 struct Cube *cube_alloc(vec3 pos, struct Material *mat)
 {
     struct Cube *c = malloc(sizeof(struct Cube));
-    glm_vec3_dup(pos, c->pos);
+    glm_vec3_copy((vec3){ 0.f, 0.f, 0.f }, c->pos);
 
     glGenVertexArrays(1, &c->vao);
     glBindVertexArray(c->vao);
@@ -67,8 +67,10 @@ struct Cube *cube_alloc(vec3 pos, struct Material *mat)
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
-    glm_mat4_identity(c->model);
-    glm_translate(c->model, c->pos);
+    glm_mat4_identity(c->translate);
+    cube_move(c, pos);
+
+    glm_mat4_identity(c->rot);
 
     c->mat = mat;
 
@@ -88,7 +90,9 @@ void cube_render(struct Cube *c, RenderInfo *ri)
 
     mat_set_props(c->mat, ri->shader);
 
-    shader_mat4(ri->shader, "model", c->model);
+    mat4 model;
+    glm_mat4_mul(c->translate, c->rot, model);
+    shader_mat4(ri->shader, "model", model);
     shader_mat4(ri->shader, "view", ri->view);
     shader_mat4(ri->shader, "projection", ri->proj);
 
@@ -99,13 +103,20 @@ void cube_render(struct Cube *c, RenderInfo *ri)
 
 void cube_move(struct Cube *c, vec3 dir)
 {
-    glm_translate(c->model, dir);
+    glm_translate(c->translate, dir);
     glm_vec3_add(c->pos, dir, c->pos);
 }
 
 
 void cube_rot(struct Cube *c, float deg, vec3 axis)
 {
-    glm_rotate(c->model, glm_rad(deg), axis);
+    /* vec3 dir; */
+    /* glm_vec3_negate_to(c->pos, dir); */
+
+    /* cube_move(c, dir); */
+    glm_rotate(c->rot, glm_rad(deg), axis);
+
+    /* glm_vec3_negate(dir); */
+    /* cube_move(c, dir); */
 }
 

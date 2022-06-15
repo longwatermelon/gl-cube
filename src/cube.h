@@ -10,7 +10,7 @@ struct Cube
     vec3 pos;
     unsigned int vao, vb;
 
-    mat4 model;
+    mat4 translate, rot;
 
     struct Material *mat;
 };

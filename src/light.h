@@ -11,13 +11,19 @@ typedef struct
 
 Phong phong(vec3 ambient, vec3 diffuse, vec3 specular);
 
+typedef struct
+{
+    float constant, linear, quadratic;
+} Attenuation;
+
 struct Light
 {
     vec3 pos;
     Phong col;
+    Attenuation att;
 };
 
-struct Light *light_alloc(vec3 pos, Phong col);
+struct Light *light_alloc(vec3 pos, Phong col, Attenuation att);
 void light_free(struct Light *l);
 
 void light_set_props(struct Light *l, unsigned int shader, int idx);

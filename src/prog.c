@@ -52,12 +52,20 @@ void prog_mainloop(struct Prog *p)
             (vec3){ .2f, .2f, .2f },
             (vec3){ .5f, .5f, .5f },
             (vec3){ 1.f, 1.f, 1.f }
-        )),
+        ), (Attenuation){
+            .constant = 1.f,
+            .linear = .09f,
+            .quadratic = .032f
+        }),
         light_alloc((vec3){ 2.f, 3.f, -5.f }, phong(
             (vec3){ .2f, .2f, .2f },
             (vec3){ .5f, .5f, .5f },
             (vec3){ 1.f, 1.f, 1.f }
-        ))
+        ), (Attenuation){
+            .constant = 1.f,
+            .linear = .09f,
+            .quadratic = .032f
+        })
     };
 
     glEnable(GL_DEPTH_TEST);
@@ -78,7 +86,8 @@ void prog_mainloop(struct Prog *p)
 
         prog_events(p);
 
-        cube_rot(c, 2.f, (vec3){ 1.f, 0.8f, .5f });
+        cube_move(c, (vec3){ 0.f, 0.f, -.05f });
+        cube_rot(c, 2.f, (vec3){ 1.f, 1.f, 0.f });
         glClearColor(0.f, 0.f, 0.f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

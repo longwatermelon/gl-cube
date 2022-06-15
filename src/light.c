@@ -3,6 +3,11 @@
 #include <string.h>
 #include <glad/glad.h>
 
+#define LIGHT_AT(s, idx, prop) { \
+    memset(s, 0, sizeof(s)); \
+    sprintf(s, "lights[%d]." prop, idx); \
+}
+
 
 Phong phong(vec3 ambient, vec3 diffuse, vec3 specular)
 {
@@ -16,11 +21,12 @@ Phong phong(vec3 ambient, vec3 diffuse, vec3 specular)
 }
 
 
-struct Light *light_alloc(vec3 pos, Phong col)
+struct Light *light_alloc(vec3 pos, Phong col, Attenuation att)
 {
     struct Light *l = malloc(sizeof(struct Light));
     glm_vec3_dup(pos, l->pos);
     l->col = col;
+    l->att = att;
 
     return l;
 }
@@ -34,21 +40,27 @@ void light_free(struct Light *l)
 
 void light_set_props(struct Light *l, unsigned int shader, int idx)
 {
-    char tmp[100] = { 0 };
-    sprintf(tmp, "lights[%d].position", idx);
-    shader_vec3(shader, tmp, l->pos);
+    char s[100];
+    LIGHT_AT(s, idx, "position");
+    shader_vec3(shader, s, l->pos);
 
-    memset(tmp, 0, sizeof(tmp));
-    sprintf(tmp, "lights[%d].ambient", idx);
-    shader_vec3(shader, tmp, l->col.ambient);
+    LIGHT_AT(s, idx, "ambient");
+    shader_vec3(shader, s, l->col.ambient);
 
-    memset(tmp, 0, sizeof(tmp));
-    sprintf(tmp, "lights[%d].diffuse", idx);
-    shader_vec3(shader, tmp, l->col.diffuse);
+    LIGHT_AT(s, idx, "diffuse");
+    shader_vec3(shader, s, l->col.diffuse);
 
-    memset(tmp, 0, sizeof(tmp));
-    sprintf(tmp, "lights[%d].specular", idx);
-    shader_vec3(shader, tmp, l->col.specular);
+    LIGHT_AT(s, idx, "specular");
+    shader_vec3(shader, s, l->col.specular);
+
+    LIGHT_AT(s, idx, "constant");
+    shader_float(shader, s, l->att.constant);
+
+    LIGHT_AT(s, idx, "linear");
+    shader_float(shader, s, l->att.linear);
+
+    LIGHT_AT(s, idx, "quadratic");
+    shader_float(shader, s, l->att.quadratic);
 }
 
 
