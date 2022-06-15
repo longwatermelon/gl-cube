@@ -1,5 +1,6 @@
 #include "light.h"
 #include "shader.h"
+#include <string.h>
 #include <glad/glad.h>
 
 
@@ -31,13 +32,23 @@ void light_free(struct Light *l)
 }
 
 
-void light_set_props(struct Light *l, unsigned int shader)
+void light_set_props(struct Light *l, unsigned int shader, int idx)
 {
-    shader_vec3(shader, "light.position", l->pos);
+    char tmp[100] = { 0 };
+    sprintf(tmp, "lights[%d].position", idx);
+    shader_vec3(shader, tmp, l->pos);
 
-    shader_vec3(shader, "light.ambient", l->col.ambient);
-    shader_vec3(shader, "light.diffuse", l->col.diffuse);
-    shader_vec3(shader, "light.specular", l->col.specular);
+    memset(tmp, 0, sizeof(tmp));
+    sprintf(tmp, "lights[%d].ambient", idx);
+    shader_vec3(shader, tmp, l->col.ambient);
+
+    memset(tmp, 0, sizeof(tmp));
+    sprintf(tmp, "lights[%d].diffuse", idx);
+    shader_vec3(shader, tmp, l->col.diffuse);
+
+    memset(tmp, 0, sizeof(tmp));
+    sprintf(tmp, "lights[%d].specular", idx);
+    shader_vec3(shader, tmp, l->col.specular);
 }
 
 

@@ -19,7 +19,7 @@ struct Light
 struct Light *light_alloc(vec3 pos, Phong col);
 void light_free(struct Light *l);
 
-void light_set_props(struct Light *l, unsigned int shader);
+void light_set_props(struct Light *l, unsigned int shader, int idx);
 
 struct Material
 {
