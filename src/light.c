@@ -75,5 +75,6 @@ void mat_set_props(struct Material *m, unsigned int shader)
     shader_float(shader, "material.shininess", m->shininess);
 
     shader_int(shader, "material.diffuse", m->tex->tex_slot);
+    tex_bind(m->tex);
 }
 
