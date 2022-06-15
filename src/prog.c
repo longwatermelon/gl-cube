@@ -48,9 +48,9 @@ void prog_mainloop(struct Prog *p)
 
     struct Light *lights[2] = {
         light_spotlight(light_alloc((vec3){ 3.f, -1.f, -5.f }, phong(
-            (vec3){ .2f, .2f, .2f },
-            (vec3){ .5f, .5f, .5f },
-            (vec3){ 1.f, 1.f, 1.f }
+            (vec3){ .2f, .0f, .0f },
+            (vec3){ .5f, .0f, .0f },
+            (vec3){ 1.f, 0.f, 0.f }
         ), (Attenuation){
             .constant = 1.f,
             .linear = .09f,
