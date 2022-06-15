@@ -10,6 +10,8 @@ struct Material {
 in vec2 TexCoords;
 
 struct Light {
+    int type;
+
     vec3 position;
 
     vec3 ambient;
@@ -19,6 +21,9 @@ struct Light {
     float constant;
     float linear;
     float quadratic;
+
+    vec3 spotlight_dir;
+    float spotlight_cutoff;
 };
 
 in vec3 FragPos;
@@ -28,7 +33,7 @@ uniform vec3 viewPos;
 uniform Material material;
 uniform Light lights[2];
 
-vec3 calculate_light(Light light)
+vec3 calculate_point_light(Light light)
 {
     float distance = length(light.position - FragPos);
     float att = 1.0 / (light.constant + light.linear * distance + light.quadratic * distance * distance);
@@ -54,6 +59,31 @@ vec3 calculate_light(Light light)
 
     vec3 result = ambient + diffuse + specular;
     return result;
+}
+
+vec3 calculate_spotlight_light(Light light)
+{
+    float distance = length(light.position - FragPos);
+    float att = 1.0 / (light.constant + light.linear * distance + light.quadratic * distance * distance);
+
+    float theta = dot(normalize(light.position - FragPos), normalize(-light.spotlight_dir));
+
+    if (theta > light.spotlight_cutoff)
+    {
+        return calculate_point_light(light);
+    }
+    else
+    {
+        return vec3(light.ambient * att * vec3(texture(material.diffuse, TexCoords)));
+    }
+}
+
+vec3 calculate_light(Light light)
+{
+    if (light.type == 0) return calculate_point_light(light);
+    if (light.type == 1) return calculate_spotlight_light(light);
+
+    return vec3(0.0);
 }
 
 void main()

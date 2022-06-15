@@ -24,6 +24,7 @@ Phong phong(vec3 ambient, vec3 diffuse, vec3 specular)
 struct Light *light_alloc(vec3 pos, Phong col, Attenuation att)
 {
     struct Light *l = malloc(sizeof(struct Light));
+    l->type = LIGHT_POINT;
     glm_vec3_dup(pos, l->pos);
     l->col = col;
     l->att = att;
@@ -38,9 +39,24 @@ void light_free(struct Light *l)
 }
 
 
+struct Light *light_spotlight(struct Light *l, vec3 dir, float cutoff)
+{
+    l->type = LIGHT_SPOTLIGHT;
+    glm_vec3_dup(dir, l->spotlight_dir);
+    l->spotlight_cutoff = cutoff;
+
+    return l;
+}
+
+
 void light_set_props(struct Light *l, unsigned int shader, int idx)
 {
     char s[100];
+
+    // base parameters
+    LIGHT_AT(s, idx, "type");
+    shader_int(shader, s, l->type);
+
     LIGHT_AT(s, idx, "position");
     shader_vec3(shader, s, l->pos);
 
@@ -61,6 +77,16 @@ void light_set_props(struct Light *l, unsigned int shader, int idx)
 
     LIGHT_AT(s, idx, "quadratic");
     shader_float(shader, s, l->att.quadratic);
+
+    // spotlight
+    if (l->type == LIGHT_SPOTLIGHT)
+    {
+        LIGHT_AT(s, idx, "spotlight_dir");
+        shader_vec3(shader, s, l->spotlight_dir);
+
+        LIGHT_AT(s, idx, "spotlight_cutoff");
+        shader_float(shader, s, l->spotlight_cutoff);
+    }
 }
 
 

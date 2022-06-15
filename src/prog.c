@@ -38,7 +38,6 @@ void prog_free(struct Prog *p)
 void prog_mainloop(struct Prog *p)
 {
     glUseProgram(p->shader);
-    shader_int(p->shader, "nlights", 2);
 
     struct Texture *diffuse = tex_alloc("res/container.png", 0, p->shader);
     struct Texture *specular = tex_alloc("res/specular.png", 1, p->shader);
@@ -48,7 +47,7 @@ void prog_mainloop(struct Prog *p)
     struct Cube *c = cube_alloc((vec3){ 2.f, -1.f, -5.f }, mat);
 
     struct Light *lights[2] = {
-        light_alloc((vec3){ 3.f, -1.f, -5.f }, phong(
+        light_spotlight(light_alloc((vec3){ 3.f, -1.f, -5.f }, phong(
             (vec3){ .2f, .2f, .2f },
             (vec3){ .5f, .5f, .5f },
             (vec3){ 1.f, 1.f, 1.f }
@@ -56,7 +55,7 @@ void prog_mainloop(struct Prog *p)
             .constant = 1.f,
             .linear = .09f,
             .quadratic = .032f
-        }),
+        }), (vec3){ 0.f, 0.f, -1.f }, cosf(glm_rad(12.5f))),
         light_alloc((vec3){ 2.f, 3.f, -5.f }, phong(
             (vec3){ .2f, .2f, .2f },
             (vec3){ .5f, .5f, .5f },
@@ -86,7 +85,8 @@ void prog_mainloop(struct Prog *p)
 
         prog_events(p);
 
-        cube_move(c, (vec3){ 0.f, 0.f, -.05f });
+        glm_vec3_copy(p->cam->pos, lights[0]->pos);
+        glm_vec3_copy(p->cam->front, lights[0]->spotlight_dir);
         cube_rot(c, 2.f, (vec3){ 1.f, 1.f, 0.f });
 
         glClearColor(0.f, 0.f, 0.f, 1.f);

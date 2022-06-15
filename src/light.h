@@ -16,15 +16,25 @@ typedef struct
     float constant, linear, quadratic;
 } Attenuation;
 
+enum { LIGHT_POINT, LIGHT_SPOTLIGHT };
+
 struct Light
 {
+    int type;
+
     vec3 pos;
     Phong col;
     Attenuation att;
+
+    // spotlight
+    vec3 spotlight_dir;
+    float spotlight_cutoff;
 };
 
 struct Light *light_alloc(vec3 pos, Phong col, Attenuation att);
 void light_free(struct Light *l);
+
+struct Light *light_spotlight(struct Light *l, vec3 dir, float cutoff);
 
 void light_set_props(struct Light *l, unsigned int shader, int idx);
 
