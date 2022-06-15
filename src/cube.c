@@ -46,7 +46,7 @@ const float g_verts[] = {
     -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
 };
 
-struct Cube *cube_alloc(vec3 pos)
+struct Cube *cube_alloc(vec3 pos, struct Material *mat)
 {
     struct Cube *c = malloc(sizeof(struct Cube));
     glm_vec3_dup(pos, c->pos);
@@ -67,6 +67,8 @@ struct Cube *cube_alloc(vec3 pos)
     glm_mat4_identity(c->model);
     glm_translate(c->model, c->pos);
 
+    c->mat = mat;
+
     return c;
 }
 
@@ -80,6 +82,8 @@ void cube_free(struct Cube *c)
 void cube_render(struct Cube *c, RenderInfo *ri)
 {
     glUseProgram(ri->shader);
+
+    mat_set_props(c->mat, ri->shader);
 
     shader_mat4(ri->shader, "model", c->model);
     shader_mat4(ri->shader, "view", ri->view);

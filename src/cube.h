@@ -2,6 +2,7 @@
 #define CUBE_H
 
 #include "util.h"
+#include "light.h"
 #include <cglm/cglm.h>
 
 struct Cube
@@ -10,9 +11,11 @@ struct Cube
     unsigned int vao, vb;
 
     mat4 model;
+
+    struct Material *mat;
 };
 
-struct Cube *cube_alloc(vec3 pos);
+struct Cube *cube_alloc(vec3 pos, struct Material *mat);
 void cube_free(struct Cube *c);
 
 void cube_render(struct Cube *c, RenderInfo *ri);
