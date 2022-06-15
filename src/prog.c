@@ -40,9 +40,10 @@ void prog_mainloop(struct Prog *p)
     glUseProgram(p->shader);
     shader_int(p->shader, "nlights", 2);
 
-    struct Texture *tex = tex_alloc("res/container.png", 0, p->shader);
+    struct Texture *diffuse = tex_alloc("res/container.png", 0, p->shader);
+    struct Texture *specular = tex_alloc("res/specular.png", 1, p->shader);
 
-    struct Material *mat = mat_alloc(tex, (vec3){ .5f, .5f, .5f }, 32.f);
+    struct Material *mat = mat_alloc(diffuse, specular, 32.f);
 
     struct Cube *c = cube_alloc((vec3){ 2.f, -1.f, -5.f }, mat);
 

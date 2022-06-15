@@ -7,7 +7,7 @@
 struct Texture *tex_alloc(const char *path, unsigned int slot, unsigned int shader)
 {
     struct Texture *t = malloc(sizeof(struct Texture));
-    t->tex_slot = GL_TEXTURE0 + slot;
+    t->tex_slot = slot;
 
     glGenTextures(1, &t->id);
 
@@ -45,8 +45,6 @@ struct Texture *tex_alloc(const char *path, unsigned int slot, unsigned int shad
         exit(EXIT_FAILURE);
     }
 
-    shader_int(shader, "material.diffuse", slot);
-
     return t;
 }
 
@@ -60,7 +58,7 @@ void tex_free(struct Texture *t)
 
 void tex_bind(struct Texture *t)
 {
-    glActiveTexture(t->tex_slot);
+    glActiveTexture(GL_TEXTURE0 + t->tex_slot);
     glBindTexture(GL_TEXTURE_2D, t->id);
 }
 
