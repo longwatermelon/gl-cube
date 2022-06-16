@@ -47,7 +47,6 @@ struct Mesh *mesh_alloc(Vertex *verts, size_t nverts, unsigned int *indices, siz
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tex_coords));
     glEnableVertexAttribArray(2);
 
-    glm_mat4_identity(m->model);
     return m;
 }
 
@@ -63,7 +62,7 @@ void mesh_free(struct Mesh *m)
 }
 
 
-void mesh_render(struct Mesh *m, RenderInfo *ri)
+void mesh_render(struct Mesh *m, RenderInfo *ri, mat4 model)
 {
     glUseProgram(ri->shader);
 
@@ -85,8 +84,7 @@ void mesh_render(struct Mesh *m, RenderInfo *ri)
         glBindTexture(GL_TEXTURE_2D, m->textures[i]->id);
     }
 
-
-    shader_mat4(ri->shader, "model", m->model);
+    shader_mat4(ri->shader, "model", model);
     shader_mat4(ri->shader, "view", ri->view);
     shader_mat4(ri->shader, "projection", ri->proj);
 

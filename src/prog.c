@@ -43,7 +43,7 @@ void prog_mainloop(struct Prog *p)
 {
     glUseProgram(p->shader);
 
-    struct Model *m = model_alloc("res/backpack.obj");
+    struct Model *m = model_alloc((vec3){ 0.f, 0.f, 0.f }, "res/backpack.obj");
     printf("Finished processing model\n");
 
     struct Light *lights[2] = {
@@ -95,7 +95,6 @@ void prog_mainloop(struct Prog *p)
 
         for (size_t i = 0; i < 2; ++i)
             light_set_props(lights[i], p->ri.shader, i);
-
 
         model_render(m, &p->ri);
 

@@ -7,7 +7,7 @@
 #include <assimp/material.h>
 
 
-struct Model *model_alloc(const char *path)
+struct Model *model_alloc(vec3 pos, const char *path)
 {
     struct Model *m = malloc(sizeof(struct Model));
     const struct aiScene *scene = aiImportFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
@@ -32,6 +32,10 @@ struct Model *model_alloc(const char *path)
     m->ntextures_loaded = 0;
 
     model_process_node(m, scene->mRootNode, scene);
+
+    glm_mat4_identity(m->translation);
+    glm_mat4_identity(m->rotation);
+
     return m;
 }
 
@@ -53,8 +57,24 @@ void model_free(struct Model *m)
 
 void model_render(struct Model *m, RenderInfo *ri)
 {
+    mat4 model;
+    glm_mat4_mul(m->translation, m->rotation, model);
+
     for (size_t i = 0; i < m->nmeshes; ++i)
-        mesh_render(m->meshes[i], ri);
+        mesh_render(m->meshes[i], ri, model);
+}
+
+
+void model_move(struct Model *m, vec3 dir)
+{
+    glm_translate(m->translation, dir);
+    glm_vec3_add(m->pos, dir, m->pos);
+}
+
+
+void model_rot(struct Model *m, float rad, vec3 axis)
+{
+    glm_rotate(m->rotation, rad, axis);
 }
 
 
