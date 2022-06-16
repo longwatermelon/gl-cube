@@ -55,7 +55,7 @@ void prog_mainloop(struct Prog *p)
             .linear = .09f,
             .quadratic = .032f
         }), (vec3){ 0.f, 0.f, -1.f }, cosf(glm_rad(14.5f)), cosf(glm_rad(20.5f))),
-        light_alloc((vec3){ 2.f, 3.f, -5.f }, phong(
+        light_alloc((vec3){ 0.f, 0.f, 5.f }, phong(
             (vec3){ .7f, .7f, .7f },
             (vec3){ 1.f, 1.f, 1.f },
             (vec3){ 1.f, 1.f, 1.f }
@@ -91,7 +91,6 @@ void prog_mainloop(struct Prog *p)
         glm_vec3_scale(diff, 1.f / 5.f, diff);
 
         glm_vec3_add(lights[0]->spotlight_dir, diff, lights[0]->spotlight_dir);
-//        glm_vec3_copy(p->cam->front, lights[0]->spotlight_dir);
 
         glClearColor(0.f, 0.f, 0.f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

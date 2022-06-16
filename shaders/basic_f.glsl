@@ -36,6 +36,9 @@ uniform Light lights[2];
 
 vec3 calculate_point_light(Light light)
 {
+    if (dot(normalize(FragPos - light.position), normalize(Normal)) >= 0.f)
+        return vec3(0.0);
+
     // ambient
     vec3 ambient = light.ambient * vec3(texture(material.diffuse, TexCoords));
 

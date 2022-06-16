@@ -83,8 +83,7 @@ void mesh_render(struct Mesh *m, RenderInfo *ri, mat4 model)
         shader_int(ri->shader, s, i);
         glBindTexture(GL_TEXTURE_2D, m->textures[i]->id);
 
-        if (!is_diffuse)
-            shader_float(ri->shader, "material.shininess", 32.f);
+        shader_float(ri->shader, "material.shininess", 32.f);
     }
 
     shader_mat4(ri->shader, "model", model);
