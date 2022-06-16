@@ -3,6 +3,7 @@
 
 #include "util.h"
 #include "texture.h"
+#include "render.h"
 #include <cglm/cglm.h>
 
 typedef struct

@@ -1,8 +1,8 @@
 #ifndef PROG_H
 #define PROG_H
 
-#include "util.h"
 #include "shader.h"
+#include "render.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
