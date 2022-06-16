@@ -1,6 +1,7 @@
 #include "mesh.h"
 #include "util.h"
 #include <string.h>
+#include <stddef.h>
 #include <stdlib.h>
 #include <glad/glad.h>
 
@@ -39,15 +40,14 @@ struct Mesh *mesh_alloc(Vertex *verts, size_t nverts, unsigned int *indices, siz
     glEnableVertexAttribArray(0);
 
     // norms
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, norm));
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)sizeof(vec3));
 
     // tex
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tex_coords));
     glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(sizeof(vec3) * 2));
 
     glm_mat4_identity(m->model);
-
     return m;
 }
 
@@ -75,6 +75,7 @@ void mesh_render(struct Mesh *m, RenderInfo *ri)
 
     for (size_t i = 0; i < m->ntextures; ++i)
     {
+        glActiveTexture(GL_TEXTURE0 + i);
         bool is_diffuse = m->textures[i]->type == TEXTURETYPE_DIFFUSE;
 
         char s[100];
@@ -83,18 +84,19 @@ void mesh_render(struct Mesh *m, RenderInfo *ri)
 
         TEX_AT(s, num, prop);
 
-        shader_float(ri->shader, s, i);
-        tex_bind(m->textures[i], GL_TEXTURE0 + i);
+        shader_int(ri->shader, s, i);
+        glBindTexture(GL_TEXTURE_2D, m->textures[i]->id);
     }
+
 
     shader_mat4(ri->shader, "model", m->model);
     shader_mat4(ri->shader, "view", ri->view);
     shader_mat4(ri->shader, "projection", ri->proj);
 
-    glActiveTexture(GL_TEXTURE0);
-
     glBindVertexArray(m->vao);
     glDrawElements(GL_TRIANGLES, m->nindices, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
+
+    glActiveTexture(GL_TEXTURE0);
 }
 

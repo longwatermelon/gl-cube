@@ -2,6 +2,7 @@
 #include "cube.h"
 #include "light.h"
 #include "model.h"
+#include <stb/stb_image.h>
 #include <stdlib.h>
 
 
@@ -22,6 +23,8 @@ struct Prog *prog_alloc(GLFWwindow *win)
     glm_mat4_identity(p->ri.view);
 
     glm_perspective(glm_rad(45.f), 800.f / 600.f, .1f, 100.f, p->ri.proj);
+
+    stbi_set_flip_vertically_on_load(true);
 
     return p;
 }

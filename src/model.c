@@ -120,23 +120,21 @@ struct Mesh *model_process_mesh(struct Model *m, struct aiMesh *mesh, const stru
     }
 
     // material
-    if (mesh->mMaterialIndex >= 0)
-    {
-        struct aiMaterial *mat = sc->mMaterials[mesh->mMaterialIndex];
+    struct aiMaterial *mat = sc->mMaterials[mesh->mMaterialIndex];
 
-        size_t ndiff;
-        struct Texture **diffuse_maps = model_load_mat_textures(m, mat, aiTextureType_DIFFUSE, TEXTURETYPE_DIFFUSE, &ndiff);
+    size_t ndiff;
+    struct Texture **diffuse_maps = model_load_mat_textures(m, mat, aiTextureType_DIFFUSE, TEXTURETYPE_DIFFUSE, &ndiff);
 
-        size_t nspec;
-        struct Texture **specular_maps = model_load_mat_textures(m, mat, aiTextureType_SPECULAR, TEXTURETYPE_SPECULAR, &nspec);
+    size_t nspec;
+    struct Texture **specular_maps = model_load_mat_textures(m, mat, aiTextureType_SPECULAR, TEXTURETYPE_SPECULAR, &nspec);
 
-        textures = malloc(sizeof(struct Texture*) * (ndiff + nspec));
-        memcpy(textures, diffuse_maps, ndiff * sizeof(struct Texture*));
-        memcpy(&textures[ndiff], specular_maps, nspec * sizeof(struct Texture*));
+    ntextures = ndiff + nspec;
+    textures = malloc(sizeof(struct Texture*) * ntextures);
+    memcpy(textures, diffuse_maps, ndiff * sizeof(struct Texture*));
+    memcpy(&textures[ndiff], specular_maps, nspec * sizeof(struct Texture*));
 
-        free(diffuse_maps);
-        free(specular_maps);
-    }
+    free(diffuse_maps);
+    free(specular_maps);
 
     return mesh_alloc(vertices, nverts, indices, nindices, textures, ntextures);
 }
