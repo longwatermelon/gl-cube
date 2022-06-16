@@ -103,7 +103,7 @@ void prog_mainloop(struct Prog *p)
         glfwPollEvents();
     }
 
-//    model_free(m);
+    model_free(m);
 }
 
 

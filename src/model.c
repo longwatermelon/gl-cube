@@ -42,6 +42,12 @@ void model_free(struct Model *m)
         mesh_free(m->meshes[i]);
 
     free(m->meshes);
+
+    for (size_t i = 0; i < m->ntextures_loaded; ++i)
+        tex_free(m->textures_loaded[i]);
+
+    free(m->textures_loaded);
+    free(m);
 }
 
 
