@@ -54,13 +54,13 @@ struct Mesh *mesh_alloc(Vertex *verts, size_t nverts, unsigned int *indices, siz
 
 void mesh_free(struct Mesh *m)
 {
-    free(m->verts);
-    free(m->indices);
-
     for (size_t i = 0; i < m->ntextures; ++i)
         tex_free(m->textures[i]);
 
     free(m->textures);
+
+    free(m->verts);
+    free(m->indices);
 
     free(m);
 }

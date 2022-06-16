@@ -45,12 +45,6 @@ void prog_mainloop(struct Prog *p)
 
     struct Model *m = model_alloc("res/backpack.obj");
     printf("Finished processing model\n");
-    /* struct Texture *diffuse = tex_alloc("res/container.png", 0, p->shader); */
-    /* struct Texture *specular = tex_alloc("res/specular.png", 1, p->shader); */
-
-    /* struct Material *mat = mat_alloc(diffuse, specular, 32.f); */
-
-    /* struct Cube *c = cube_alloc((vec3){ 2.f, -1.f, -5.f }, mat); */
 
     struct Light *lights[2] = {
         light_spotlight(light_alloc((vec3){ 3.f, -1.f, -5.f }, phong(
@@ -94,8 +88,6 @@ void prog_mainloop(struct Prog *p)
         glm_vec3_copy(p->cam->pos, lights[0]->pos);
         glm_vec3_copy(p->cam->front, lights[0]->spotlight_dir);
 
-        /* cube_rot(c, 2.f, (vec3){ 1.f, 1.f, 0.f }); */
-
         glClearColor(0.f, 0.f, 0.f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -107,13 +99,11 @@ void prog_mainloop(struct Prog *p)
 
         model_render(m, &p->ri);
 
-        /* cube_render(c, &p->ri); */
-
         glfwSwapBuffers(p->win);
         glfwPollEvents();
     }
 
-    /* cube_free(c); */
+//    model_free(m);
 }
 
 
