@@ -41,8 +41,8 @@ void prog_mainloop(struct Prog *p)
 {
     glUseProgram(p->ri.shader);
 
-    struct Model *m = model_alloc((vec3){ 0.f, 0.f, 0.f }, "res/knife/300 sword/OBJ/sword.obj");
-//    struct Model *m = model_alloc((vec3){ 0.f, 0.f, 0.f }, "res/backpack.obj");
+//    struct Model *m = model_alloc((vec3){ 0.f, 0.f, 0.f }, "res/knife/300 sword/OBJ/sword.obj");
+    struct Model *m = model_alloc((vec3){ 0.f, 0.f, 0.f }, "res/backpack/backpack.obj");
     printf("Finished processing model\n");
 
     struct Light *lights[2] = {
@@ -67,6 +67,7 @@ void prog_mainloop(struct Prog *p)
     };
 
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
 
     glfwSetCursorPos(p->win, 400.f, 300.f);
     glfwSetInputMode(p->win, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -85,7 +86,7 @@ void prog_mainloop(struct Prog *p)
 
         prog_events(p);
 
-        model_rot(m, glm_rad(2.f), (vec3){ 1.f, .5f, .8f });
+//        model_rot(m, glm_rad(2.f), (vec3){ 1.f, .5f, .8f });
 
         glClearColor(0.f, 0.f, 0.f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
