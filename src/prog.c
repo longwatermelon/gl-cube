@@ -1,5 +1,4 @@
 #include "prog.h"
-#include "cube.h"
 #include "light.h"
 #include "model.h"
 #include <stb/stb_image.h>
