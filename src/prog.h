@@ -9,11 +9,9 @@
 struct Prog
 {
     GLFWwindow *win;
-
     RenderInfo ri;
 
     struct Camera *cam;
-    unsigned int shader;
 };
 
 struct Prog *prog_alloc(GLFWwindow *win);

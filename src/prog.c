@@ -14,8 +14,7 @@ struct Prog *prog_alloc(GLFWwindow *win)
     glm_vec3_copy((vec3){ 0.f, 0.f, 5.f }, cam_pos);
     p->cam = cam_alloc(cam_pos, (vec3){ -90.f, 0.f, 0.f });
 
-    p->shader = shader_create("shaders/basic_v.glsl", "shaders/basic_f.glsl");
-    p->ri.shader = p->shader;
+    p->ri.shader = shader_create("shaders/basic_v.glsl", "shaders/basic_f.glsl");
 
     p->ri.cam = p->cam;
     glm_mat4_identity(p->ri.proj);
@@ -33,14 +32,14 @@ void prog_free(struct Prog *p)
 {
     cam_free(p->cam);
 
-    glDeleteShader(p->shader);
+    glDeleteShader(p->ri.shader);
     free(p);
 }
 
 
 void prog_mainloop(struct Prog *p)
 {
-    glUseProgram(p->shader);
+    glUseProgram(p->ri.shader);
 
     struct Model *m = model_alloc((vec3){ 0.f, 0.f, 0.f }, "res/knife/300 sword/OBJ/sword.obj");
     printf("Finished processing model\n");
