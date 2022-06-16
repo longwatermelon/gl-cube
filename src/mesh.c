@@ -7,7 +7,7 @@
 
 #define TEX_AT(s, idx, prop) { \
     memset(s, 0, sizeof(s)); \
-    sprintf(s, "%s%zu", prop, idx); \
+    sprintf(s, "material.%s%zu", prop, idx); \
 }
 
 struct Mesh *mesh_alloc(Vertex *verts, size_t nverts, unsigned int *indices, size_t nindices, struct Texture **textures, size_t ntextures)
@@ -82,6 +82,9 @@ void mesh_render(struct Mesh *m, RenderInfo *ri, mat4 model)
 
         shader_int(ri->shader, s, i);
         glBindTexture(GL_TEXTURE_2D, m->textures[i]->id);
+
+        if (!is_diffuse)
+            shader_float(ri->shader, "material.shininess", 32.f);
     }
 
     shader_mat4(ri->shader, "model", model);

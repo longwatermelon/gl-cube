@@ -47,17 +47,17 @@ void prog_mainloop(struct Prog *p)
 
     struct Light *lights[2] = {
         light_spotlight(light_alloc((vec3){ 3.f, -1.f, -5.f }, phong(
-            (vec3){ .2f, .0f, .0f },
-            (vec3){ .5f, .0f, .0f },
-            (vec3){ 1.f, 0.f, 0.f }
+            (vec3){ .2f, .0f, .2f },
+            (vec3){ .5f, .0f, .5f },
+            (vec3){ 1.f, 0.f, 1.f }
         ), (Attenuation){
             .constant = 1.f,
             .linear = .09f,
             .quadratic = .032f
-        }), (vec3){ 0.f, 0.f, -1.f }, cosf(glm_rad(12.5f)), cosf(glm_rad(17.5f))),
+        }), (vec3){ 0.f, 0.f, -1.f }, cosf(glm_rad(14.5f)), cosf(glm_rad(20.5f))),
         light_alloc((vec3){ 2.f, 3.f, -5.f }, phong(
-            (vec3){ .2f, .2f, .2f },
-            (vec3){ .5f, .5f, .5f },
+            (vec3){ .7f, .7f, .7f },
+            (vec3){ 1.f, 1.f, 1.f },
             (vec3){ 1.f, 1.f, 1.f }
         ), (Attenuation){
             .constant = 1.f,
@@ -85,7 +85,13 @@ void prog_mainloop(struct Prog *p)
         prog_events(p);
 
         glm_vec3_copy(p->cam->pos, lights[0]->pos);
-        glm_vec3_copy(p->cam->front, lights[0]->spotlight_dir);
+
+        vec3 diff;
+        glm_vec3_sub(p->cam->front, lights[0]->spotlight_dir, diff);
+        glm_vec3_scale(diff, 1.f / 5.f, diff);
+
+        glm_vec3_add(lights[0]->spotlight_dir, diff, lights[0]->spotlight_dir);
+//        glm_vec3_copy(p->cam->front, lights[0]->spotlight_dir);
 
         glClearColor(0.f, 0.f, 0.f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
