@@ -42,6 +42,7 @@ void prog_mainloop(struct Prog *p)
     glUseProgram(p->ri.shader);
 
     struct Model *m = model_alloc((vec3){ 0.f, 0.f, 0.f }, "res/knife/300 sword/OBJ/sword.obj");
+//    struct Model *m = model_alloc((vec3){ 0.f, 0.f, 0.f }, "res/backpack.obj");
     printf("Finished processing model\n");
 
     struct Light *lights[2] = {
@@ -84,13 +85,6 @@ void prog_mainloop(struct Prog *p)
 
         prog_events(p);
 
-        glm_vec3_copy(p->cam->pos, lights[0]->pos);
-
-        vec3 diff;
-        glm_vec3_sub(p->cam->front, lights[0]->spotlight_dir, diff);
-        glm_vec3_scale(diff, 1.f / 5.f, diff);
-
-        glm_vec3_add(lights[0]->spotlight_dir, diff, lights[0]->spotlight_dir);
         model_rot(m, glm_rad(2.f), (vec3){ 1.f, .5f, .8f });
 
         glClearColor(0.f, 0.f, 0.f, 1.f);
