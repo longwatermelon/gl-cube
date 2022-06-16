@@ -1,4 +1,6 @@
 #include "camera.h"
+#include "shader.h"
+#include <glad/glad.h>
 
 
 struct Camera *cam_alloc(vec3 pos, vec3 rot)
@@ -39,5 +41,11 @@ void cam_update_vectors(struct Camera *c)
     glm_vec3_normalize_to(front, c->front);
     glm_vec3_normalize_to(up, c->up);
     glm_vec3_normalize_to(right, c->right);
+}
+
+
+void cam_set_props(struct Camera *c, unsigned int shader)
+{
+    shader_vec3(shader, "viewPos", c->pos);
 }
 

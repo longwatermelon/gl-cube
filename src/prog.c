@@ -42,22 +42,22 @@ void prog_mainloop(struct Prog *p)
 {
     glUseProgram(p->shader);
 
-    struct Model *m = model_alloc((vec3){ 0.f, 0.f, 0.f }, "res/backpack.obj");
+    struct Model *m = model_alloc((vec3){ 0.f, 0.f, 0.f }, "res/knife/300 sword/OBJ/sword.obj");
     printf("Finished processing model\n");
 
     struct Light *lights[2] = {
         light_spotlight(light_alloc((vec3){ 3.f, -1.f, -5.f }, phong(
-            (vec3){ .2f, .0f, .2f },
-            (vec3){ .5f, .0f, .5f },
-            (vec3){ 1.f, 0.f, 1.f }
+            (vec3){ .2f, .2f, .2f },
+            (vec3){ .5f, .5f, .5f },
+            (vec3){ 1.f, 1.f, 1.f }
         ), (Attenuation){
             .constant = 1.f,
             .linear = .09f,
             .quadratic = .032f
         }), (vec3){ 0.f, 0.f, -1.f }, cosf(glm_rad(14.5f)), cosf(glm_rad(20.5f))),
-        light_alloc((vec3){ 0.f, 0.f, 5.f }, phong(
-            (vec3){ .7f, .7f, .7f },
-            (vec3){ 1.f, 1.f, 1.f },
+        light_alloc((vec3){ 0.f, 3.f, 0.f }, phong(
+            (vec3){ .2f, .2f, .2f },
+            (vec3){ .5f, .5f, .5f },
             (vec3){ 1.f, 1.f, 1.f }
         ), (Attenuation){
             .constant = 1.f,
@@ -91,6 +91,7 @@ void prog_mainloop(struct Prog *p)
         glm_vec3_scale(diff, 1.f / 5.f, diff);
 
         glm_vec3_add(lights[0]->spotlight_dir, diff, lights[0]->spotlight_dir);
+        model_rot(m, glm_rad(2.f), (vec3){ 1.f, .5f, .8f });
 
         glClearColor(0.f, 0.f, 0.f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

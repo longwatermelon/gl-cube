@@ -32,15 +32,17 @@ in vec3 Normal;
  
 uniform vec3 viewPos;
 uniform Material material;
-uniform Light lights[2];
+
+#define nlights 2
+uniform Light lights[nlights];
 
 vec3 calculate_point_light(Light light)
 {
-    if (dot(normalize(FragPos - light.position), normalize(Normal)) >= 0.f)
-        return vec3(0.0);
-
     // ambient
     vec3 ambient = light.ambient * vec3(texture(material.diffuse, TexCoords));
+
+    /* if (dot(normalize(FragPos - light.position), normalize(Normal)) > 0) */
+    /*     return ambient; */
 
     // diffuse 
     vec3 norm = normalize(Normal);
@@ -82,7 +84,7 @@ void main()
 {
     vec3 res = vec3(0.0);
 
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < nlights; i++)
         res += calculate_light(lights[i]);
 
     FragColor = vec4(res, 1.0);
