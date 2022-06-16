@@ -1,7 +1,7 @@
 CC=gcc
-CFLAGS=-std=gnu17 -ggdb -Wall -Werror
+CFLAGS=-std=gnu17 -ggdb -Wall -Werror -pg
 INC=-Ideps/include
-LIBS=-Ldeps/lib -lglfw -lcglm -lm -lglad -lstb_image
+LIBS=-Ldeps/lib -lglfw -lcglm -lm -lglad -lstb_image -lassimp
 
 SRC=$(wildcard src/*.c)
 OBJS=$(addprefix obj/, $(SRC:.c=.o))

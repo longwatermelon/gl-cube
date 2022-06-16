@@ -38,16 +38,5 @@ struct Light *light_spotlight(struct Light *l, vec3 dir, float cutoff, float out
 
 void light_set_props(struct Light *l, unsigned int shader, int idx);
 
-struct Material
-{
-    struct Texture *diffuse, *specular;
-    float shininess;
-};
-
-struct Material *mat_alloc(struct Texture *diff, struct Texture *spec, float shininess);
-void mat_free(struct Material *m);
-
-void mat_set_props(struct Material *m, unsigned int shader);
-
 #endif
 

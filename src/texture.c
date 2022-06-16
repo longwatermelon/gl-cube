@@ -1,13 +1,16 @@
 #include "texture.h"
 #include <stdlib.h>
+#include <string.h>
 #include <glad/glad.h>
 #include <stb/stb_image.h>
 
 
-struct Texture *tex_alloc(const char *path, unsigned int slot, unsigned int shader)
+struct Texture *tex_alloc(const char *path, int type)
 {
     struct Texture *t = malloc(sizeof(struct Texture));
-    t->tex_slot = slot;
+    t->type = type;
+
+    strcpy(t->path, path);
 
     glGenTextures(1, &t->id);
 
@@ -56,9 +59,9 @@ void tex_free(struct Texture *t)
 }
 
 
-void tex_bind(struct Texture *t)
+void tex_bind(struct Texture *t, unsigned int slot)
 {
-    glActiveTexture(GL_TEXTURE0 + t->tex_slot);
+    glActiveTexture(slot);
     glBindTexture(GL_TEXTURE_2D, t->id);
 }
 

@@ -1,6 +1,7 @@
 #include "prog.h"
 #include "cube.h"
 #include "light.h"
+#include "model.h"
 #include <stdlib.h>
 
 
@@ -10,7 +11,7 @@ struct Prog *prog_alloc(GLFWwindow *win)
     p->win = win;
 
     vec3 cam_pos;
-    glm_vec3_copy((vec3){ 2.f, 0.f, 0.f }, cam_pos);
+    glm_vec3_copy((vec3){ 0.f, 0.f, 5.f }, cam_pos);
     p->cam = cam_alloc(cam_pos, (vec3){ -90.f, 0.f, 0.f });
 
     p->shader = shader_create("shaders/basic_v.glsl", "shaders/basic_f.glsl");
@@ -39,12 +40,14 @@ void prog_mainloop(struct Prog *p)
 {
     glUseProgram(p->shader);
 
-    struct Texture *diffuse = tex_alloc("res/container.png", 0, p->shader);
-    struct Texture *specular = tex_alloc("res/specular.png", 1, p->shader);
+    struct Model *m = model_alloc("res/backpack.obj");
+    printf("Finished processing model\n");
+    /* struct Texture *diffuse = tex_alloc("res/container.png", 0, p->shader); */
+    /* struct Texture *specular = tex_alloc("res/specular.png", 1, p->shader); */
 
-    struct Material *mat = mat_alloc(diffuse, specular, 32.f);
+    /* struct Material *mat = mat_alloc(diffuse, specular, 32.f); */
 
-    struct Cube *c = cube_alloc((vec3){ 2.f, -1.f, -5.f }, mat);
+    /* struct Cube *c = cube_alloc((vec3){ 2.f, -1.f, -5.f }, mat); */
 
     struct Light *lights[2] = {
         light_spotlight(light_alloc((vec3){ 3.f, -1.f, -5.f }, phong(
@@ -87,7 +90,8 @@ void prog_mainloop(struct Prog *p)
 
         glm_vec3_copy(p->cam->pos, lights[0]->pos);
         glm_vec3_copy(p->cam->front, lights[0]->spotlight_dir);
-        cube_rot(c, 2.f, (vec3){ 1.f, 1.f, 0.f });
+
+        /* cube_rot(c, 2.f, (vec3){ 1.f, 1.f, 0.f }); */
 
         glClearColor(0.f, 0.f, 0.f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -97,13 +101,16 @@ void prog_mainloop(struct Prog *p)
         for (size_t i = 0; i < 2; ++i)
             light_set_props(lights[i], p->ri.shader, i);
 
-        cube_render(c, &p->ri);
+
+        model_render(m, &p->ri);
+
+        /* cube_render(c, &p->ri); */
 
         glfwSwapBuffers(p->win);
         glfwPollEvents();
     }
 
-    cube_free(c);
+    /* cube_free(c); */
 }
 
 

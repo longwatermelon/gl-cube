@@ -2,16 +2,22 @@
 #define TEXTURE_H
 
 #include "shader.h"
+#include <limits.h>
+
+enum { TEXTURETYPE_DIFFUSE, TEXTURETYPE_SPECULAR };
 
 struct Texture
 {
-    unsigned int id, tex_slot;
+    int type;
+    unsigned int id;
+
+    char path[PATH_MAX];
 };
 
-struct Texture *tex_alloc(const char *path, unsigned int slot, unsigned int shader);
+struct Texture *tex_alloc(const char *path, int type);
 void tex_free(struct Texture *t);
 
-void tex_bind(struct Texture *t);
+void tex_bind(struct Texture *t, unsigned int slot);
 
 #endif
 

@@ -88,7 +88,7 @@ void cube_render(struct Cube *c, RenderInfo *ri)
 {
     glUseProgram(ri->shader);
 
-    mat_set_props(c->mat, ri->shader);
+//    mat_set_props(c->mat, ri->shader);
 
     mat4 model;
     glm_mat4_mul(c->translate, c->rot, model);
