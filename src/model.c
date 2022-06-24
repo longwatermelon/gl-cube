@@ -76,6 +76,9 @@ void model_move(struct Model *m, vec3 dir)
 {
     glm_translate(m->translation, dir);
     glm_vec3_add(m->pos, dir, m->pos);
+
+    for (size_t i = 0; i < m->nmeshes; ++i)
+        glm_vec3_copy(m->pos, m->meshes[i]->pos);
 }
 
 
@@ -88,6 +91,9 @@ void model_rot(struct Model *m, vec3 rot)
 
     glm_mat4_identity(m->rotation);
     glm_quat_rotate(m->rotation, quat, m->rotation);
+
+    for (size_t i = 0; i < m->nmeshes; ++i)
+        glm_vec3_copy(m->rot, m->meshes[i]->rot);
 }
 
 

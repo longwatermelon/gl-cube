@@ -84,13 +84,13 @@ void prog_mainloop(struct Prog *p)
 
         prog_events(p);
 
+        model_rot(m, (vec3){ 0.f, .00f, .01f });
+
         glClearColor(0.f, 0.f, 0.f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         cam_set_props(p->cam, p->ri.shader);
         cam_view_mat(p->cam, p->ri.view);
-
-        model_rot(m, (vec3){ 0.f, .00f, .01f });
 
         for (size_t i = 0; i < 2; ++i)
             light_set_props(lights[i], p->ri.shader, i);

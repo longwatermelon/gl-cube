@@ -14,6 +14,9 @@ struct Mesh *mesh_alloc(Vertex *verts, size_t nverts, unsigned int *indices, siz
 {
     struct Mesh *m = malloc(sizeof(struct Mesh));
 
+    glm_vec3_copy((vec3){ 0.f, 0.f, 0.f }, m->pos);
+    glm_vec3_copy((vec3){ 0.f, 0.f, 0.f }, m->rot);
+
     m->verts = verts;
     m->nverts = nverts;
 

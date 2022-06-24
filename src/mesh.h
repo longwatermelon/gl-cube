@@ -14,6 +14,8 @@ typedef struct
 
 struct Mesh
 {
+    vec3 pos, rot;
+
     Vertex *verts;
     size_t nverts;
 
