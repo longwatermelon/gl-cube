@@ -10,9 +10,7 @@ struct Prog *prog_alloc(GLFWwindow *win)
     struct Prog *p = malloc(sizeof(struct Prog));
     p->win = win;
 
-    vec3 cam_pos;
-    glm_vec3_copy((vec3){ 0.f, 0.f, 5.f }, cam_pos);
-    p->cam = cam_alloc(cam_pos, (vec3){ -90.f, 0.f, 0.f });
+    p->cam = cam_alloc((vec3){ 0.f, 0.f, 0.f }, (vec3){ 0.f, 0.f, 0.f });
 
     p->ri.shader = shader_create("shaders/basic_v.glsl", "shaders/basic_f.glsl");
 
@@ -42,7 +40,7 @@ void prog_mainloop(struct Prog *p)
     glUseProgram(p->ri.shader);
 
 //    struct Model *m = model_alloc((vec3){ 0.f, 0.f, 0.f }, "res/knife/300 sword/OBJ/sword.obj");
-    struct Model *m = model_alloc((vec3){ 0.f, 0.f, 0.f }, "res/backpack/backpack.obj");
+    struct Model *m = model_alloc((vec3){ 5.f, 0.f, 0.f }, (vec3){ 0.f, 0.f, 0.f }, "res/backpack/backpack.obj");
     printf("Finished processing model\n");
 
     struct Light *lights[2] = {
@@ -80,16 +78,19 @@ void prog_mainloop(struct Prog *p)
         double mx, my;
         glfwGetCursorPos(p->win, &mx, &my);
 
-        cam_rot(p->cam, (vec3){ (mx - prev_mx) / 5.f, -(my - prev_my) / 5.f, 0.f });
+        cam_rot(p->cam, (vec3){ 0.f, -(my - prev_my) / 100.f, -(mx - prev_mx) / 100.f });
         prev_mx = mx;
         prev_my = my;
 
         prog_events(p);
 
-//        model_rot(m, glm_rad(2.f), (vec3){ 1.f, .5f, .8f });
-
         glClearColor(0.f, 0.f, 0.f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        vec3 target;
+        glm_vec3_add(p->cam->pos, p->cam->front, target);
+
+        model_rot(m, (vec3){ 0.f, .00f, .01f });
 
         glm_look(p->cam->pos, p->cam->front, p->cam->up, p->ri.view);
 
@@ -109,7 +110,6 @@ void prog_mainloop(struct Prog *p)
 void prog_events(struct Prog *p)
 {
     float move = .05f;
-    float rot = 2.f;
 
     vec3 front;
     glm_vec3_scale(p->cam->front, move, front);
@@ -126,17 +126,5 @@ void prog_events(struct Prog *p)
 
     if (glfwGetKey(p->win, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) p->cam->pos[1] -= move;
     if (glfwGetKey(p->win, GLFW_KEY_SPACE) == GLFW_PRESS) p->cam->pos[1] += move;
-
-    if (glfwGetKey(p->win, GLFW_KEY_LEFT) == GLFW_PRESS)
-        cam_rot(p->cam, (vec3){ -rot, 0.f, 0.f });
-
-    if (glfwGetKey(p->win, GLFW_KEY_RIGHT) == GLFW_PRESS)
-        cam_rot(p->cam, (vec3){ rot, 0.f, 0.f });
-
-    if (glfwGetKey(p->win, GLFW_KEY_UP) == GLFW_PRESS)
-        cam_rot(p->cam, (vec3){ 0.f, rot, 0.f });
-
-    if (glfwGetKey(p->win, GLFW_KEY_DOWN) == GLFW_PRESS)
-        cam_rot(p->cam, (vec3){ 0.f, -rot, 0.f });
 }
 

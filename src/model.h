@@ -8,7 +8,7 @@
 
 struct Model
 {
-    vec3 pos;
+    vec3 pos, rot;
 
     struct Mesh **meshes;
     size_t nmeshes;
@@ -21,13 +21,13 @@ struct Model
     mat4 translation, rotation;
 };
 
-struct Model *model_alloc(vec3 pos, const char *path);
+struct Model *model_alloc(vec3 pos, vec3 rot, const char *path);
 void model_free(struct Model *m);
 
 void model_render(struct Model *m, RenderInfo *ri);
 
 void model_move(struct Model *m, vec3 dir);
-void model_rot(struct Model *m, float rad, vec3 axis);
+void model_rot(struct Model *m, vec3 rot);
 
 void model_process_node(struct Model *m, struct aiNode *node, const struct aiScene *sc);
 struct Mesh *model_process_mesh(struct Model *m, struct aiMesh *mesh, const struct aiScene *sc);

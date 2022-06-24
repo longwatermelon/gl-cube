@@ -1,4 +1,5 @@
 #include "model.h"
+#include "util.h"
 #include <unistd.h>
 #include <libgen.h>
 #include <assimp/cimport.h>
@@ -7,7 +8,7 @@
 #include <assimp/material.h>
 
 
-struct Model *model_alloc(vec3 pos, const char *path)
+struct Model *model_alloc(vec3 pos, vec3 rot, const char *path)
 {
     struct Model *m = malloc(sizeof(struct Model));
     const struct aiScene *scene = aiImportFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
@@ -35,6 +36,12 @@ struct Model *model_alloc(vec3 pos, const char *path)
 
     glm_mat4_identity(m->translation);
     glm_mat4_identity(m->rotation);
+
+    glm_vec3_copy((vec3){ 0.f, 0.f, 0.f }, m->pos);
+    glm_vec3_copy((vec3){ 0.f, 0.f, 0.f }, m->rot);
+
+    model_move(m, pos);
+    model_rot(m, rot);
 
     return m;
 }
@@ -72,9 +79,15 @@ void model_move(struct Model *m, vec3 dir)
 }
 
 
-void model_rot(struct Model *m, float rad, vec3 axis)
+void model_rot(struct Model *m, vec3 rot)
 {
-    glm_rotate(m->rotation, rad, axis);
+    glm_vec3_add(m->rot, rot, m->rot);
+
+    vec4 quat;
+    util_quat_from_rot(m->rot, quat);
+
+    glm_mat4_identity(m->rotation);
+    glm_quat_rotate(m->rotation, quat, m->rotation);
 }
 
 
