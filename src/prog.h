@@ -9,7 +9,7 @@
 struct Prog
 {
     GLFWwindow *win;
-    RenderInfo ri;
+    RenderInfo *ri;
 
     struct Camera *cam;
 };

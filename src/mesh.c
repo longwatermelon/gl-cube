@@ -67,8 +67,6 @@ void mesh_free(struct Mesh *m)
 
 void mesh_render(struct Mesh *m, RenderInfo *ri, mat4 model)
 {
-    glUseProgram(ri->shader);
-
     unsigned int diffuse_n = 1;
     unsigned int specular_n = 1;
 

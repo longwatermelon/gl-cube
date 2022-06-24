@@ -12,13 +12,14 @@ struct Prog *prog_alloc(GLFWwindow *win)
 
     p->cam = cam_alloc((vec3){ 0.f, 0.f, 0.f }, (vec3){ 0.f, 0.f, 0.f });
 
-    p->ri.shader = shader_create("shaders/basic_v.glsl", "shaders/basic_f.glsl");
+    p->ri = ri_alloc();
+    ri_add_shader(p->ri, "shaders/basic_v.glsl", "shaders/basic_f.glsl");
 
-    p->ri.cam = p->cam;
-    glm_mat4_identity(p->ri.proj);
-    glm_mat4_identity(p->ri.view);
+    p->ri->cam = p->cam;
+    glm_mat4_identity(p->ri->proj);
+    glm_mat4_identity(p->ri->view);
 
-    glm_perspective(glm_rad(45.f), 800.f / 600.f, .1f, 100.f, p->ri.proj);
+    glm_perspective(glm_rad(45.f), 800.f / 600.f, .1f, 100.f, p->ri->proj);
 
     stbi_set_flip_vertically_on_load(true);
 
@@ -29,17 +30,12 @@ struct Prog *prog_alloc(GLFWwindow *win)
 void prog_free(struct Prog *p)
 {
     cam_free(p->cam);
-
-    glDeleteShader(p->ri.shader);
     free(p);
 }
 
 
 void prog_mainloop(struct Prog *p)
 {
-    glUseProgram(p->ri.shader);
-
-//    struct Model *m = model_alloc((vec3){ 0.f, 0.f, 0.f }, "res/knife/300 sword/OBJ/sword.obj");
     struct Model *m = model_alloc((vec3){ 5.f, 0.f, 0.f }, (vec3){ 0.f, 0.f, 0.f }, "res/backpack/backpack.obj");
     printf("Finished processing model\n");
 
@@ -89,13 +85,15 @@ void prog_mainloop(struct Prog *p)
         glClearColor(0.f, 0.f, 0.f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        cam_set_props(p->cam, p->ri.shader);
-        cam_view_mat(p->cam, p->ri.view);
+        ri_use_shader(p->ri, SHADER_BASIC);
+
+        cam_set_props(p->cam, p->ri->shader);
+        cam_view_mat(p->cam, p->ri->view);
 
         for (size_t i = 0; i < 2; ++i)
-            light_set_props(lights[i], p->ri.shader, i);
+            light_set_props(lights[i], p->ri->shader, i);
 
-        model_render(m, &p->ri);
+        model_render(m, p->ri);
 
         glfwSwapBuffers(p->win);
         glfwPollEvents();
