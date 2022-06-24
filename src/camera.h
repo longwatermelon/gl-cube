@@ -18,5 +18,7 @@ void cam_update_vectors(struct Camera *c);
 
 void cam_set_props(struct Camera *c, unsigned int shader);
 
+void cam_view_mat(struct Camera *c, mat4 dest);
+
 #endif
 

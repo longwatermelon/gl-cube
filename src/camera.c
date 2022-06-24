@@ -53,3 +53,9 @@ void cam_set_props(struct Camera *c, unsigned int shader)
     shader_vec3(shader, "viewPos", c->pos);
 }
 
+
+void cam_view_mat(struct Camera *c, mat4 dest)
+{
+    glm_look(c->pos, c->front, c->up, dest);
+}
+

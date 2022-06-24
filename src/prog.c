@@ -87,12 +87,10 @@ void prog_mainloop(struct Prog *p)
         glClearColor(0.f, 0.f, 0.f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        vec3 target;
-        glm_vec3_add(p->cam->pos, p->cam->front, target);
+        cam_set_props(p->cam, p->ri.shader);
+        cam_view_mat(p->cam, p->ri.view);
 
         model_rot(m, (vec3){ 0.f, .00f, .01f });
-
-        glm_look(p->cam->pos, p->cam->front, p->cam->up, p->ri.view);
 
         for (size_t i = 0; i < 2; ++i)
             light_set_props(lights[i], p->ri.shader, i);

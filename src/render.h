@@ -8,8 +8,8 @@ typedef struct
 {
     unsigned int shader;
 
+    mat4 proj, view;
     struct Camera *cam;
-    mat4 view, proj;
 } RenderInfo;
 
 #endif
