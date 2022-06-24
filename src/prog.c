@@ -16,10 +16,6 @@ struct Prog *prog_alloc(GLFWwindow *win)
     ri_add_shader(p->ri, "shaders/basic_v.glsl", "shaders/basic_f.glsl");
 
     p->ri->cam = p->cam;
-    glm_mat4_identity(p->ri->proj);
-    glm_mat4_identity(p->ri->view);
-
-    glm_perspective(glm_rad(45.f), 800.f / 600.f, .1f, 100.f, p->ri->proj);
 
     stbi_set_flip_vertically_on_load(true);
 
