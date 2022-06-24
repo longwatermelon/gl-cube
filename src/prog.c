@@ -1,6 +1,4 @@
 #include "prog.h"
-#include "light.h"
-#include "model.h"
 #include <stb/stb_image.h>
 #include <stdlib.h>
 
@@ -32,30 +30,6 @@ void prog_free(struct Prog *p)
 
 void prog_mainloop(struct Prog *p)
 {
-    struct Model *m = model_alloc((vec3){ 5.f, 0.f, 0.f }, (vec3){ 0.f, 0.f, 0.f }, "res/backpack/backpack.obj");
-    printf("Finished processing model\n");
-
-    struct Light *lights[2] = {
-        light_spotlight(light_alloc((vec3){ 3.f, -1.f, -5.f }, phong(
-            (vec3){ .2f, .2f, .2f },
-            (vec3){ .5f, .5f, .5f },
-            (vec3){ 1.f, 1.f, 1.f }
-        ), (Attenuation){
-            .constant = 1.f,
-            .linear = .09f,
-            .quadratic = .032f
-        }), (vec3){ 0.f, 0.f, -1.f }, cosf(glm_rad(14.5f)), cosf(glm_rad(20.5f))),
-        light_alloc((vec3){ 0.f, 3.f, 0.f }, phong(
-            (vec3){ .2f, .2f, .2f },
-            (vec3){ .5f, .5f, .5f },
-            (vec3){ 1.f, 1.f, 1.f }
-        ), (Attenuation){
-            .constant = 1.f,
-            .linear = .09f,
-            .quadratic = .032f
-        })
-    };
-
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
 
@@ -64,6 +38,26 @@ void prog_mainloop(struct Prog *p)
 
     double prev_mx, prev_my;
     glfwGetCursorPos(p->win, &prev_mx, &prev_my);
+
+    float verts[] = {
+        2.f, 0.f, 0.f,
+        2.f, -1.f, 0.f,
+        2.f, -1.f, 1.f
+    };
+
+    unsigned int vao, vb;
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+
+    glGenBuffers(1, &vb);
+    glBindBuffer(GL_ARRAY_BUFFER, vb);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+    glEnableVertexAttribArray(0);
+
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     while (!glfwWindowShouldClose(p->win))
     {
@@ -76,8 +70,6 @@ void prog_mainloop(struct Prog *p)
 
         prog_events(p);
 
-        model_rot(m, (vec3){ 0.f, .00f, .01f });
-
         glClearColor(0.f, 0.f, 0.f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -86,16 +78,19 @@ void prog_mainloop(struct Prog *p)
         cam_set_props(p->cam, p->ri->shader);
         cam_view_mat(p->cam, p->ri->view);
 
-        for (size_t i = 0; i < 2; ++i)
-            light_set_props(lights[i], p->ri->shader, i);
+        mat4 model;
+        glm_mat4_identity(model);
+        shader_mat4(p->ri->shader, "model", model);
+        shader_mat4(p->ri->shader, "view", p->ri->view);
+        shader_mat4(p->ri->shader, "projection", p->ri->proj);
 
-        model_render(m, p->ri);
+        glBindVertexArray(vao);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glBindVertexArray(0);
 
         glfwSwapBuffers(p->win);
         glfwPollEvents();
     }
-
-    model_free(m);
 }
 
 
