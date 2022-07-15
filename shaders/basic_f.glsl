@@ -41,9 +41,6 @@ vec3 calculate_point_light(Light light)
     // ambient
     vec3 ambient = light.ambient * vec3(texture(material.diffuse1, TexCoords));
 
-    /* if (dot(normalize(FragPos - light.position), normalize(Normal)) > 0) */
-    /*     return ambient; */
-
     // diffuse 
     vec3 norm = normalize(Normal);
     vec3 lightDir = normalize(light.position - FragPos);
