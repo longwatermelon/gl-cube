@@ -5,6 +5,7 @@ rm .gitmodules
 
 git init
 git add .
+rm README.md
 git commit -m "first commit"
 
 git submodule add https://github.com/glfw/glfw deps/glfw
