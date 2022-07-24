@@ -11,6 +11,8 @@ ifeq ($(UNAME_S), Darwin)
 	LDFLAGS += -framework OpenGL -framework IOKit -framework CoreVideo -framework Cocoa
 endif
 
+.PHONY: deps
+
 all:
 	mkdir -p obj/src
 	$(MAKE) target
