@@ -11,11 +11,9 @@ ifeq ($(UNAME_S), Darwin)
 	LIBS += -framework OpenGL -framework IOKit -framework CoreVideo -framework Cocoa
 endif
 
-.PHONY: deps
+.PHONY: dirs deps
 
-all:
-	mkdir -p obj/src
-	$(MAKE) target
+all: dirs target
 
 target: $(OBJS)
 	$(CC) $(CFLAGS) $(INC) $^ $(LIBS)
@@ -28,6 +26,9 @@ deps:
 	cd deps/glad && $(CC) -c src/glad.c -Iinclude && ar rc ../libglad.a glad.o
 	cd deps/glfw && cmake . && make && mv src/libglfw3.a ../libglfw.a
 	cd deps/stb_image && $(CC) -c stb_image.c && ar rc ../libstb_image.a stb_image.o
+
+dirs:
+	mkdir -p obj/src
 
 clean:
 	-rm -rf obj/ a.out
