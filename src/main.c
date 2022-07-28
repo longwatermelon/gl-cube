@@ -1,4 +1,5 @@
 #include "prog.h"
+#include "util.h"
 
 
 int main()
@@ -9,12 +10,12 @@ int main()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-    GLFWwindow *win = glfwCreateWindow(800, 600, "Opengl", 0, 0);
+    GLFWwindow *win = glfwCreateWindow(SCRW, SCRH, "Opengl", 0, 0);
     glfwMakeContextCurrent(win);
 
     gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
-    glViewport(0, 0, 800, 600);
+    glViewport(0, 0, SCRW, SCRH);
 
     struct Prog *p = prog_alloc(win);
     prog_mainloop(p);
