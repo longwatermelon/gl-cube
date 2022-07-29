@@ -8,10 +8,14 @@
 
 struct Prog
 {
+    bool running;
+    bool focused;
+
     GLFWwindow *win;
     RenderInfo *ri;
 
     struct Camera *cam;
+    double prev_mx, prev_my;
 };
 
 struct Prog *prog_alloc(GLFWwindow *win);

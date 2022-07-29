@@ -6,6 +6,8 @@
 struct Prog *prog_alloc(GLFWwindow *win)
 {
     struct Prog *p = malloc(sizeof(struct Prog));
+    p->running = true;
+    p->focused = true;
     p->win = win;
 
     p->cam = cam_alloc((vec3){ 0.f, 0.f, 0.f }, (vec3){ 0.f, 0.f, 0.f });
@@ -35,8 +37,7 @@ void prog_mainloop(struct Prog *p)
     glfwSetCursorPos(p->win, SCRW / 2.f, SCRH / 2.f);
     glfwSetInputMode(p->win, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    double prev_mx, prev_my;
-    glfwGetCursorPos(p->win, &prev_mx, &prev_my);
+    glfwGetCursorPos(p->win, &p->prev_mx, &p->prev_my);
 
     float verts[] = {
         2.f, 0.f, 0.f,
@@ -58,14 +59,17 @@ void prog_mainloop(struct Prog *p)
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    while (!glfwWindowShouldClose(p->win))
+    while (p->running)
     {
-        double mx, my;
-        glfwGetCursorPos(p->win, &mx, &my);
+        if (p->focused)
+        {
+            double mx, my;
+            glfwGetCursorPos(p->win, &mx, &my);
 
-        cam_rot(p->cam, (vec3){ 0.f, -(my - prev_my) / 100.f, -(mx - prev_mx) / 100.f });
-        prev_mx = mx;
-        prev_my = my;
+            cam_rot(p->cam, (vec3){ 0.f, -(my - p->prev_my) / 100.f, -(mx - p->prev_mx) / 100.f });
+            p->prev_mx = mx;
+            p->prev_my = my;
+        }
 
         prog_events(p);
 
@@ -96,6 +100,21 @@ void prog_mainloop(struct Prog *p)
 
 void prog_events(struct Prog *p)
 {
+    if (glfwWindowShouldClose(p->win)) p->running = false;
+
+    if (p->focused && glfwGetKey(p->win, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    {
+        glfwSetInputMode(p->win, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        p->focused = false;
+    }
+
+    if (!p->focused && glfwGetMouseButton(p->win, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+    {
+        glfwGetCursorPos(p->win, &p->prev_mx, &p->prev_my);
+        glfwSetInputMode(p->win, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        p->focused = true;
+    }
+
     float move = .05f;
 
     vec3 angle;
