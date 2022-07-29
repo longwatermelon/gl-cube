@@ -4,10 +4,10 @@
 #include "camera.h"
 #include <cglm/cglm.h>
 
-enum
+typedef enum
 {
     SHADER_BASIC
-};
+} ShaderType;
 
 typedef struct
 {
@@ -23,7 +23,9 @@ typedef struct
 RenderInfo *ri_alloc();
 void ri_free(RenderInfo *ri);
 
-void ri_add_shader(RenderInfo *ri, const char *vert, const char *frag);
+// type is for checking if shaders are created in
+// correct order according to ShaderType enum
+void ri_add_shader(RenderInfo *ri, ShaderType type, const char *vert, const char *frag);
 
 void ri_use_shader(RenderInfo *ri, int i);
 

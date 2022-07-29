@@ -29,8 +29,15 @@ void ri_free(RenderInfo *ri)
 }
 
 
-void ri_add_shader(RenderInfo *ri, const char *vert, const char *frag)
+void ri_add_shader(RenderInfo *ri, ShaderType type, const char *vert, const char *frag)
 {
+    if (ri->nshaders != type)
+    {
+        fprintf(stderr, "[ri_add_shader] Error: ShaderType %d is not associated with vertex shader "
+                "'%s' and fragment shader '%s'.\n", type, vert, frag);
+        exit(EXIT_FAILURE);
+    }
+
     ri->shaders = realloc(ri->shaders, sizeof(unsigned int) * ++ri->nshaders);
     ri->shaders[ri->nshaders - 1] = shader_create(vert, frag);
 }
