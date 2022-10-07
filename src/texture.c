@@ -59,7 +59,7 @@ void tex_free(struct Texture *t)
 
 void tex_bind(struct Texture *t, unsigned int slot)
 {
-    glActiveTexture(slot);
+    glActiveTexture(GL_TEXTURE0 + slot);
     glBindTexture(GL_TEXTURE_2D, t->id);
 }
 
